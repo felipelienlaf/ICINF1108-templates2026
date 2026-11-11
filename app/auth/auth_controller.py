@@ -7,6 +7,8 @@ from app.auth.auth_schemas import (
     ForgotPasswordResponse,
     LoginDto,
     RegisterDto,
+    ResetPasswordDto,
+    ResetPasswordResponse,
     User,
 )
 from app.auth.auth_service import AuthServiceDep
@@ -77,3 +79,11 @@ def forgot_password(
     body: ForgotPasswordDto, service: AuthServiceDep
 ) -> ForgotPasswordResponse:
     return service.forgot_password(body)
+
+
+# Pública: se autentica con el token del enlace, no con una sesión.
+@router.post("/password/reset")
+def reset_password(
+    body: ResetPasswordDto, service: AuthServiceDep
+) -> ResetPasswordResponse:
+    return service.reset_password(body)
