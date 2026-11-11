@@ -35,3 +35,12 @@ SESSION_MAX_AGE_SECONDS: Final[int] = (
 
 # Solo debe ser `true` cuando la app se sirve por HTTPS.
 SESSION_COOKIE_SECURE: Final[bool] = os.getenv("SESSION_COOKIE_SECURE") == "true"
+
+# Recuperación de contraseña (JWT de un solo uso).
+RESET_TOKEN_SECRET: Final[str] = os.getenv("RESET_TOKEN_SECRET", "")
+RESET_TOKEN_EXPIRE_MINUTES: Final[int] = int(
+    os.getenv("RESET_TOKEN_EXPIRE_MINUTES", "15")
+)
+RESET_LINK_BASE_URL: Final[str] = os.getenv(
+    "RESET_LINK_BASE_URL", "http://localhost:3000/auth/password/reset"
+)
