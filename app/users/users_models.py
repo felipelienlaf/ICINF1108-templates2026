@@ -31,3 +31,20 @@ class UserSessionModel(Base):
     expiresAt: Mapped[datetime] = mapped_column(
         "expires_at", DateTime(timezone=True), index=True
     )
+
+
+# Tokens de recuperación de contraseña emitidos. `usedAt` es nulo mientras el
+# enlace está pendiente; al usarlo se completa y deja de servir.
+class PasswordResetTokenModel(Base):
+    __tablename__ = "password_reset_tokens"
+
+    jti: Mapped[str] = mapped_column(String(64), primary_key=True)
+    userId: Mapped[UUID] = mapped_column(
+        "user_id", ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    expiresAt: Mapped[datetime] = mapped_column(
+        "expires_at", DateTime(timezone=True)
+    )
+    usedAt: Mapped[datetime | None] = mapped_column(
+        "used_at", DateTime(timezone=True), default=None
+    )

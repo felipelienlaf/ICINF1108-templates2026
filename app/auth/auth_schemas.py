@@ -108,6 +108,24 @@ def _email_errors(v: object) -> list[str]:
     )
 
 
+class ForgotPasswordDto(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: EmailStr
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def _validate_email(cls, v: object) -> object:
+        _raise_validation(_email_errors(v))
+        return v
+
+
+class ForgotPasswordResponse(BaseModel):
+    message: str
+    reset_link: str | None = None
+    
+    
+
 def _raise_validation(messages: list[str]) -> None:
     if messages:
         raise ValueError(", ".join(messages))
