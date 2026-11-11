@@ -1,9 +1,9 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from app.users.users_models import UserModel
+from app.users.users_models import UserModel, UserSessionModel
 
 
 class UsersRepository:
@@ -20,3 +20,9 @@ class UsersRepository:
         self.db.add(user)
         self.db.flush()
         return user
+
+    # Cierra todas las sesiones abiertas del usuario.
+    def delete_sessions(self, user_id: UUID) -> None:
+        self.db.execute(
+            delete(UserSessionModel).where(UserSessionModel.userId == user_id)
+        )

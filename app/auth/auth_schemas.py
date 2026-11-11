@@ -125,7 +125,43 @@ class ForgotPasswordResponse(BaseModel):
     reset_link: str | None = None
     
     
+class ResetPasswordDto(BaseModel):
+    model_config = ConfigDict(extra="forbid")
 
+    token: str
+    password: str
+
+    @field_validator("token", mode="before")
+    @classmethod
+    def _validate_token(cls, v: object) -> object:
+        errors: list[str] = []
+
+        if not isinstance(v, str):
+            errors.append("El token debe ser un texto")
+        elif v.strip() == "":
+            errors.append("El token no puede estar vacío")
+
+        _raise_validation(errors)
+        return v
+
+    @field_validator("password", mode="before")
+    @classmethod
+    def _validate_password(cls, v: object) -> object:
+        errors: list[str] = []
+
+        if not isinstance(v, str):
+            errors.append(PASSWORD_TYPE_MESSAGE)
+        if not (isinstance(v, str) and 8 <= len(v) <= 72):
+            errors.append(PASSWORD_LENGTH_MESSAGE)
+
+        _raise_validation(errors)
+        return v
+
+
+class ResetPasswordResponse(BaseModel):
+    message: str
+    
+    
 def _raise_validation(messages: list[str]) -> None:
     if messages:
         raise ValueError(", ".join(messages))
